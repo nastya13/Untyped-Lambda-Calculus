@@ -33,15 +33,18 @@ checkExpr _ (Lit (LBool a)) = TBool
 checkExpr env (App a b) = let 
                               t1 = checkExpr env a
                               t2 = checkExpr env b
-                              go a = if (t1 == TErr || t2 == TErr) 
+                              go = if (t1 == TErr || t2 == TErr) 
                                         then TErr 
                                      else 
                                         checkOnTArr t1 t2
-                          in go 2
+                          in go
 -- if it is lambda function
 checkExpr env (Lam n t ex) = if (t == TErr) 
                                  then TErr
-                             else TArr t (checkExpr (extend env (n,t)) ex)
+                             else if (a /= TErr) 
+                                      then TArr t a 
+                                  else TErr
+                                  where a = (checkExpr (extend env (n,t)) ex) 
 -- if it is variable
 checkExpr env (Var x) = case (lookup x env) of
                             Just e -> e
@@ -58,8 +61,7 @@ check t = if (t == TErr)
               then False
           else True
 
-main = print ("Ok")
-
+main = print ("o")
 --some examples
 --print (checkExpr [] (App (Lam "x" (TArr (TArr TBool TBool) (TArr TBool TBool)) (Var "x")) (Lam "y" (TArr TBool TBool) (Var "y"))) )
 --print(checkExpr [] (Lam "x" (TArr (TArr TBool TBool) TBool) (Var "x")))
