@@ -49,7 +49,7 @@ checkExpr env (Var x) = case (lookup x env) of
 
 -- check on type "TArr" from application
 checkOnTArr :: Type -> Type -> Type
-checkOnTArr (TArr t1a t1r) t2 = if (t1a == t2) then t1r else TErr
+checkOnTArr (TArr t1a t1r) t2 = if (t1a == t2 && t1a /= TErr && t1r /= TErr) then t1r else TErr
 checkOnTArr _ _ = TErr
 
 -- check on valid type expression. If type is "TErr" - False, else "True" 
@@ -66,3 +66,4 @@ main = print ("Ok")
 --print (checkExpr [] (App (Lam "x" (TArr (TArr TBool TBool) TBool) (Var "x")) (Lam "y" TBool (Var "y"))))
 --print (check (checkExpr [] (Lam "y" (TArr TBool TBool) (Var "y"))))
 --print (check (checkExpr [] (App (App (Lam "x" (TArr TInt TInt) (Var "x")) (Lam "y" TInt (Var "y"))) (Lit (LInt 3))) ))
+--print (check (checkExpr [] (App (App (Lam "x" (TArr TInt TInt) (App (Lam "w" TBool (Var "w")) (Lit (LInt 3)) )) (Lam "y" TInt (Var "y"))) (Lit (LInt 3))) ))
